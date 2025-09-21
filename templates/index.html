@@ -16,61 +16,34 @@
             text-transform: uppercase;
             letter-spacing: 0.1em;
         }
-
         body {
-            background-color: #111827; /* Fallback color */
+            background-color: #111827;
             position: relative;
             overflow: hidden;
         }
-        
-        /* 1. NEW BACKGROUND IMPLEMENTATION FOR DOT-MATRIX EFFECT */
-        /* We create two pseudo-elements: one for the image and one for the pixel grid. */
-        
-        /* The main background image layer (bottom layer) */
         body::before {
             content: '';
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: -2; /* Furthest back */
-            background-image: 
+            top: -5%; left: -5%;
+            width: 110%; height: 110%;
+            z-index: -1;
+            background-image:
                 linear-gradient(rgba(17, 24, 39, 0.5), rgba(17, 24, 39, 0.5)),
                 url('/static/background.jpg');
             background-size: cover;
             background-position: center;
+            transform: scale(1);
+            transition: transform 4s ease-out;
         }
-        
-        /* The dot-matrix pixel grid layer (top layer) */
-        body::after {
-            content: '';
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: -1; /* Sits on top of the image, but behind the content */
-            
-            /* This creates the dot-matrix pattern */
-            background-image: radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 0);
-            background-size: 8px 8px;
-            
-            /* 2. THE HOVER EFFECT */
-            /* The grid is invisible by default... */
-            opacity: 0;
-            /* ...and will smoothly fade in and out over 0.5 seconds. */
-            transition: opacity 0.5s ease-in-out;
+        body:hover::before {
+            transform: scale(1.05);
         }
-
-        /* When the user hovers over the body, the pixel grid fades in. */
-        body:hover::after {
-            opacity: 1;
-        }
-
         .glass-card {
             background: rgba(31, 41, 55, 0.25);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
-
         @keyframes fadeInScaleUp {
             from { opacity: 0; transform: scale(0.9); }
             to { opacity: 1; transform: scale(1); }
@@ -78,7 +51,6 @@
         .animate-fade-scale {
             animation: fadeInScaleUp 0.5s ease-out forwards;
         }
-
         .fancy-loader {
             width: 50px;
             height: 50px;
@@ -90,7 +62,6 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
-        
         .interactive-heading:hover {
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.5), 0 0 20px rgba(255, 255, 255, 0.3);
             animation: flicker 1.5s infinite alternate;
@@ -115,27 +86,31 @@
             <h1 class="text-4xl text-white mb-4 transition-all duration-300 interactive-heading cursor-default">
                 Days Death to a Banana
             </h1>
-            <p class="text-gray-400 text-sm">Upload an image. Let AI predict its fate.</p>
+            <p class="text-gray-400 text-sm">Upload an image. Let our AI predict its fate.</p>
         </div>
 
-        <!-- Image Upload Area -->
-        <div>
-            <label for="file-upload" class="group cursor-pointer border-2 border-dashed border-gray-600 rounded-xl p-10 flex flex-col items-center justify-center transition-all duration-300 hover:border-amber-400 hover:bg-gray-800/50">
-                <svg class="w-16 h-16 text-gray-500 mb-4 transition-transform duration-300 group-hover:scale-110 group-hover:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                <span id="upload-text" class="text-gray-300 transition-colors duration-300 group-hover:text-white">Choose an image</span>
-                <span class="text-xs text-gray-500 mt-1">PNG or JPG</span>
+        <!-- Input Selection Area -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- File Upload Button -->
+            <label for="file-upload" class="group cursor-pointer border-2 border-dashed border-gray-600 rounded-xl p-6 flex flex-col items-center justify-center transition-all duration-300 hover:border-amber-400 hover:bg-gray-800/50">
+                <svg class="w-12 h-12 text-gray-500 mb-2 transition-transform duration-300 group-hover:scale-110 group-hover:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                <span id="upload-text" class="text-gray-300 transition-colors duration-300 group-hover:text-white text-sm">Upload File</span>
             </label>
             <input id="file-upload" type="file" class="hidden" accept="image/jpeg, image/png">
+
+            <!-- Use Camera Button -->
+            <button id="camera-button" class="group cursor-pointer border-2 border-dashed border-gray-600 rounded-xl p-6 flex flex-col items-center justify-center transition-all duration-300 hover:border-amber-400 hover:bg-gray-800/50">
+                <svg class="w-12 h-12 text-gray-500 mb-2 transition-transform duration-300 group-hover:scale-110 group-hover:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                <span class="text-gray-300 transition-colors duration-300 group-hover:text-white text-sm">Use Camera</span>
+            </button>
         </div>
 
         <!-- Image Preview and Results Section -->
         <div id="result-container" class="mt-8 hidden">
             <div class="flex flex-col md:flex-row items-center justify-around gap-6">
-                
                 <div class="w-48 h-48 rounded-2xl overflow-hidden flex items-center justify-center bg-gray-900 shadow-lg border border-gray-700">
                     <img id="image-preview" src="#" alt="Uploaded Banana" class="w-full h-full object-cover">
                 </div>
-                
                 <div class="text-center w-48 h-48 flex flex-col items-center justify-center">
                     <div id="loader" class="fancy-loader hidden"></div>
                     <div id="prediction-result" class="hidden">
@@ -147,13 +122,29 @@
             </div>
         </div>
     </main>
+    
+    <!-- Camera Modal (hidden by default) -->
+    <div id="camera-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-50 p-4">
+        <div class="bg-gray-800 rounded-2xl p-6 border border-gray-700 shadow-2xl w-full max-w-xl text-center">
+            <h2 class="font-dotmatrix text-2xl text-white mb-4">Live Camera</h2>
+            <div class="bg-black rounded-lg overflow-hidden relative aspect-video">
+                 <video id="video-feed" class="w-full h-full" autoplay playsinline></video>
+                 <canvas id="canvas" class="hidden"></canvas>
+            </div>
+            <p id="camera-error" class="text-red-400 mt-2 hidden">Could not access camera. Please check permissions.</p>
+            <div class="mt-6 flex justify-center gap-4">
+                <button id="capture-button" class="bg-amber-500 text-gray-900 font-bold py-3 px-6 rounded-lg transition-transform duration-200 hover:scale-105">Take Photo</button>
+                <button id="cancel-camera" class="bg-gray-600 text-white py-3 px-6 rounded-lg transition-transform duration-200 hover:scale-105">Cancel</button>
+            </div>
+        </div>
+    </div>
 
-    <!-- Footer credit -->
     <footer class="text-center p-4">
         <p id="footer-text" class="text-sm text-gray-500 transition-colors duration-300 hover:text-gray-300">Crafted by Anish With ❤️</p>
     </footer>
 
     <script>
+        // --- Get references to all the important HTML elements ---
         const fileUpload = document.getElementById('file-upload');
         const imagePreview = document.getElementById('image-preview');
         const resultContainer = document.getElementById('result-container');
@@ -162,9 +153,60 @@
         const loader = document.getElementById('loader');
         const predictionResultDiv = document.getElementById('prediction-result');
         const ripenessCategoryText = document.getElementById('ripeness-category');
+        
+        // --- Camera Feature Elements ---
+        const cameraButton = document.getElementById('camera-button');
+        const cameraModal = document.getElementById('camera-modal');
+        const videoFeed = document.getElementById('video-feed');
+        const captureButton = document.getElementById('capture-button');
+        const cancelCamera = document.getElementById('cancel-camera');
+        const canvas = document.getElementById('canvas');
+        const cameraError = document.getElementById('camera-error');
+        let stream = null;
 
-        fileUpload.addEventListener('change', async (event) => {
+        // --- Camera Logic ---
+        cameraButton.addEventListener('click', async () => {
+            cameraModal.classList.remove('hidden');
+            cameraError.classList.add('hidden');
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+                videoFeed.srcObject = stream;
+            } catch (err) {
+                console.error("Camera access error:", err);
+                cameraError.classList.remove('hidden');
+            }
+        });
+
+        cancelCamera.addEventListener('click', () => {
+            cameraModal.classList.add('hidden');
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+        });
+
+        captureButton.addEventListener('click', () => {
+            canvas.width = videoFeed.videoWidth;
+            canvas.height = videoFeed.videoHeight;
+            canvas.getContext('2d').drawImage(videoFeed, 0, 0, canvas.width, canvas.height);
+            
+            canvas.toBlob(blob => {
+                const capturedFile = new File([blob], "capture.jpg", { type: "image/jpeg" });
+                handleFilePrediction(capturedFile);
+            }, 'image/jpeg');
+
+            cancelCamera.click();
+        });
+
+        // --- File Upload Logic ---
+        fileUpload.addEventListener('change', (event) => {
             const file = event.target.files[0];
+            if (file) {
+                handleFilePrediction(file);
+            }
+        });
+
+        // --- Main Prediction Function (shared by both inputs) ---
+        async function handleFilePrediction(file) {
             if (!file) return;
 
             const reader = new FileReader();
@@ -197,15 +239,10 @@
                 if (result.prediction) {
                     const days = parseFloat(result.prediction);
                     predictionText.textContent = days.toFixed(1);
-                    if (days >= 6) {
-                        ripenessCategoryText.textContent = "Fresh & Greenish";
-                    } else if (days >= 4) {
-                        ripenessCategoryText.textContent = "Perfectly Ripe!";
-                    } else if (days >= 2) {
-                        ripenessCategoryText.textContent = "Ideal for Smoothies";
-                    } else {
-                        ripenessCategoryText.textContent = "Bake Banana Bread!";
-                    }
+                    if (days >= 6) ripenessCategoryText.textContent = "Fresh & Greenish";
+                    else if (days >= 4) ripenessCategoryText.textContent = "Perfectly Ripe!";
+                    else if (days >= 2) ripenessCategoryText.textContent = "Ideal for Smoothies";
+                    else ripenessCategoryText.textContent = "Bake Banana Bread!";
                 } else if (result.error) {
                     predictionText.textContent = `Error`;
                     ripenessCategoryText.textContent = result.error;
@@ -219,7 +256,8 @@
                 predictionResultDiv.classList.remove('hidden');
                 predictionResultDiv.classList.add('animate-fade-scale');
             }
-        });
+        }
     </script>
 </body>
 </html>
+
