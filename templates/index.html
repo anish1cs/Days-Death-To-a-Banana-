@@ -3,76 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Banana Ripeness Predictor</title>
+    <title>Days Death to a Banana</title>
     <!-- Tailwind CSS for modern styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts for a clean, professional look -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
     <style>
+        body, .font-dotmatrix {
+            font-family: 'DotGothic16', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
         body {
-            font-family: 'Poppins', sans-serif;
-            /* Optional: Style to use a background image from the /static folder */
-            background-image: url('/static/background.jpg');
+            background-color: #111827; /* Fallback color */
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* 1. NEW BACKGROUND IMPLEMENTATION FOR DOT-MATRIX EFFECT */
+        /* We create two pseudo-elements: one for the image and one for the pixel grid. */
+        
+        /* The main background image layer (bottom layer) */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -2; /* Furthest back */
+            background-image: 
+                linear-gradient(rgba(17, 24, 39, 0.5), rgba(17, 24, 39, 0.5)),
+                url('/static/background.jpg');
             background-size: cover;
             background-position: center;
         }
-        /* Style for the loading spinner animation */
-        .loader {
-            border: 4px solid #f3f3f3; /* Light grey */
-            border-top: 4px solid #3b82f6; /* Tailwind blue-500 */
+        
+        /* The dot-matrix pixel grid layer (top layer) */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1; /* Sits on top of the image, but behind the content */
+            
+            /* This creates the dot-matrix pattern */
+            background-image: radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 0);
+            background-size: 8px 8px;
+            
+            /* 2. THE HOVER EFFECT */
+            /* The grid is invisible by default... */
+            opacity: 0;
+            /* ...and will smoothly fade in and out over 0.5 seconds. */
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        /* When the user hovers over the body, the pixel grid fades in. */
+        body:hover::after {
+            opacity: 1;
+        }
+
+        .glass-card {
+            background: rgba(31, 41, 55, 0.25);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes fadeInScaleUp {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .animate-fade-scale {
+            animation: fadeInScaleUp 0.5s ease-out forwards;
+        }
+
+        .fancy-loader {
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            border: 5px solid rgba(255, 255, 255, 0.2);
+            border-top-color: #FBBF24;
             animation: spin 1s linear infinite;
         }
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .interactive-heading:hover {
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5), 0 0 20px rgba(255, 255, 255, 0.3);
+            animation: flicker 1.5s infinite alternate;
+        }
+        @keyframes flicker {
+            0%, 18%, 22%, 25%, 53%, 57%, 100% {
+                text-shadow:
+                0 0 4px rgba(255,255,255,0.7),
+                0 0 10px rgba(255,255,255,0.5),
+                0 0 18px rgba(255,255,255,0.3);
+            }
+            20%, 24%, 55% { text-shadow: none; }
         }
     </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
-    <div class="bg-white bg-opacity-80 backdrop-blur-sm rounded-2xl shadow-2xl p-8 max-w-lg w-full text-center m-4">
+<body class="flex flex-col items-center justify-center min-h-screen p-4 font-dotmatrix">
+
+    <main class="glass-card rounded-3xl shadow-2xl p-8 max-w-lg w-full text-center transition-all duration-500">
+        
         <!-- Header Section -->
-        <h1 class="text-3xl font-bold text-gray-800 mb-2">Days Death To a Banana!</h1>
-        <p class="text-gray-600 mb-6">Upload an image to predict the remaining edible days of a banana using an advanced AI model.</p>
+        <div class="mb-8">
+            <h1 class="text-4xl text-white mb-4 transition-all duration-300 interactive-heading cursor-default">
+                Days Death to a Banana
+            </h1>
+            <p class="text-gray-400 text-sm">Upload an image. Let AI predict its fate.</p>
+        </div>
 
         <!-- Image Upload Area -->
         <div>
-            <label for="file-upload" class="cursor-pointer border-2 border-dashed border-gray-400 rounded-lg p-10 flex flex-col items-center justify-center transition-colors duration-300 hover:bg-gray-50 hover:border-blue-500">
-                <svg class="w-12 h-12 text-gray-500 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-4-4V6a4 4 0 014-4h10a4 4 0 014 4v6a4 4 0 01-4 4H7z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 16v1a2 2 0 01-2 2H10a2 2 0 01-2-2v-1m-4-4h16"></path></svg>
-                <span id="upload-text" class="text-gray-700 font-semibold">Click to upload an image</span>
+            <label for="file-upload" class="group cursor-pointer border-2 border-dashed border-gray-600 rounded-xl p-10 flex flex-col items-center justify-center transition-all duration-300 hover:border-amber-400 hover:bg-gray-800/50">
+                <svg class="w-16 h-16 text-gray-500 mb-4 transition-transform duration-300 group-hover:scale-110 group-hover:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                <span id="upload-text" class="text-gray-300 transition-colors duration-300 group-hover:text-white">Choose an image</span>
                 <span class="text-xs text-gray-500 mt-1">PNG or JPG</span>
             </label>
             <input id="file-upload" type="file" class="hidden" accept="image/jpeg, image/png">
         </div>
 
         <!-- Image Preview and Results Section -->
-        <div id="result-container" class="mt-6 hidden">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Result</h2>
-            <div class="flex flex-col md:flex-row items-center justify-center gap-6">
-                <!-- Image Preview Box -->
-                <div class="w-48 h-48 border-2 border-gray-300 rounded-lg overflow-hidden flex items-center justify-center bg-gray-100 shadow-inner">
+        <div id="result-container" class="mt-8 hidden">
+            <div class="flex flex-col md:flex-row items-center justify-around gap-6">
+                
+                <div class="w-48 h-48 rounded-2xl overflow-hidden flex items-center justify-center bg-gray-900 shadow-lg border border-gray-700">
                     <img id="image-preview" src="#" alt="Uploaded Banana" class="w-full h-full object-cover">
                 </div>
-                <!-- Prediction Text Box -->
-                <div class="text-left">
-                     <!-- Loading Spinner (shown during prediction) -->
-                    <div id="loader" class="loader mx-auto my-4 hidden"></div>
-                    <!-- Prediction Result (shown after prediction) -->
-                    <div id="prediction-result">
-                        <p class="text-lg text-gray-600">Predicted Days Left:</p>
-                        <p id="prediction-text" class="text-4xl font-bold text-blue-600"></p>
+                
+                <div class="text-center w-48 h-48 flex flex-col items-center justify-center">
+                    <div id="loader" class="fancy-loader hidden"></div>
+                    <div id="prediction-result" class="hidden">
+                        <p class="text-lg text-gray-400 mb-1">Days Left:</p>
+                        <p id="prediction-text" class="text-6xl font-bold bg-gradient-to-r from-amber-300 to-yellow-500 text-transparent bg-clip-text"></p>
+                        <p id="ripeness-category" class="text-gray-300 mt-2 text-sm"></p>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
+
+    <!-- Footer credit -->
+    <footer class="text-center p-4">
+        <p id="footer-text" class="text-sm text-gray-500 transition-colors duration-300 hover:text-gray-300">Crafted by Anish With ❤️</p>
+    </footer>
 
     <script>
-        // Get references to all the important HTML elements
         const fileUpload = document.getElementById('file-upload');
         const imagePreview = document.getElementById('image-preview');
         const resultContainer = document.getElementById('result-container');
@@ -80,61 +161,65 @@
         const uploadText = document.getElementById('upload-text');
         const loader = document.getElementById('loader');
         const predictionResultDiv = document.getElementById('prediction-result');
+        const ripenessCategoryText = document.getElementById('ripeness-category');
 
-        // This function runs when the user selects a file
         fileUpload.addEventListener('change', async (event) => {
             const file = event.target.files[0];
             if (!file) return;
 
-            // Step 1: Show the selected image on the webpage
             const reader = new FileReader();
             reader.onload = (e) => {
                 imagePreview.src = e.target.result;
-                resultContainer.classList.remove('hidden'); // Show the result section
-                uploadText.textContent = file.name; // Update the text to the filename
+                resultContainer.classList.remove('hidden');
+                resultContainer.classList.add('animate-fade-scale');
+                uploadText.textContent = file.name;
             };
             reader.readAsDataURL(file);
 
-            // Step 2: Prepare for prediction by showing the loading spinner
             loader.classList.remove('hidden');
-            predictionResultDiv.classList.add('hidden'); // Hide any previous result
+            predictionResultDiv.classList.add('hidden');
             
             const formData = new FormData();
             formData.append('file', file);
 
             try {
-                // Step 3: Send the image to the Python backend
-                // The '/predict' path corresponds to the @app.route('/predict') in your app.py
                 const response = await fetch('/predict', {
                     method: 'POST',
                     body: formData,
                 });
 
                 if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error || `Server error: ${response.statusText}`);
+                    throw new Error(`Server responded with status: ${response.status}`);
                 }
                 
-                // Step 4: Display the result from the backend
                 const result = await response.json();
                 
                 if (result.prediction) {
-                    predictionText.textContent = `${result.prediction} Days`;
+                    const days = parseFloat(result.prediction);
+                    predictionText.textContent = days.toFixed(1);
+                    if (days >= 6) {
+                        ripenessCategoryText.textContent = "Fresh & Greenish";
+                    } else if (days >= 4) {
+                        ripenessCategoryText.textContent = "Perfectly Ripe!";
+                    } else if (days >= 2) {
+                        ripenessCategoryText.textContent = "Ideal for Smoothies";
+                    } else {
+                        ripenessCategoryText.textContent = "Bake Banana Bread!";
+                    }
                 } else if (result.error) {
-                    predictionText.textContent = `Error: ${result.error}`;
-                } else {
-                    predictionText.textContent = 'Error';
+                    predictionText.textContent = `Error`;
+                    ripenessCategoryText.textContent = result.error;
                 }
             } catch (error) {
-                predictionText.textContent = 'Failed';
+                predictionText.textContent = 'Error';
+                ripenessCategoryText.textContent = 'Prediction failed.';
                 console.error('Fetch error:', error);
             } finally {
-                // Step 5: Hide the loader and show the final result
                 loader.classList.add('hidden');
                 predictionResultDiv.classList.remove('hidden');
+                predictionResultDiv.classList.add('animate-fade-scale');
             }
         });
     </script>
 </body>
 </html>
-
