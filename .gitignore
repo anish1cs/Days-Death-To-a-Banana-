@@ -1,0 +1,34 @@
+Virtual Environment
+venv/
+.venv/
+
+Dataset
+data/
+*.csv
+
+Trained Models
+models/
+models_ensemble/
+models_for_webapp/
+*.keras
+*.pkl
+*.h5
+
+Python Cache
+pycache/
+*.pyc
+*.pyo
+*.pyd
+
+IDE & Editor specific
+.vscode/
+.idea/
+*.swp
+*.swo
+
+Jupyter Notebook Checkpoints
+.ipynb_checkpoints/
+
+Operating System Files
+.DS_Store
+Thumbs.db

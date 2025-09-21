@@ -1,0 +1,12 @@
+tensorflow
+pandas
+scikit-learn
+lightgbm
+joblib
+tqdm
+matplotlib
+numpy
+seaborn
+Pillow
+flask
+openpyxl # Often used by pandas for Excel operations
