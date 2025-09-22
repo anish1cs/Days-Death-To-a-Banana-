@@ -9,4 +9,5 @@ numpy
 seaborn
 Pillow
 flask
+gunicorn
 openpyxl # Often used by pandas for Excel operations

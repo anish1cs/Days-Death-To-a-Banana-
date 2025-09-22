@@ -1,0 +1,32 @@
+# This file tells Render how to build and deploy your application as a Docker container.
+# It is the "Blueprint" for your web service.
+
+services:
+  # A name for your service on the Render dashboard.
+  - name: banana-ripeness-app
+
+    # The type of service. 'web' means it's a web server accessible via a URL.
+    type: web
+
+    # The environment to use. 'docker' tells Render to use your Dockerfile.
+    env: docker
+
+    # A simple path that Render can periodically check to make sure your app is still running.
+    # The root path '/' of a Flask app is a perfect health check.
+    healthCheckPath: /
+
+    # The instance type to use. The 'free' plan is perfect for this project.
+    # It will "spin down" after 15 minutes of inactivity and wake up on the next visit.
+    plan: free
+
+    # CRITICAL: This section configures a persistent disk for your large model files.
+    # This is necessary because the default instance storage is too small.
+    disk:
+      # A name for your disk.
+      name: models-storage
+      # The size of the disk. 5GB is a safe amount for your 12 large model files.
+      sizeGB: 5
+      # The path inside the Docker container where the disk should be attached.
+      # This MUST match the location where your models are stored.
+      mountPath: /app/models
+
