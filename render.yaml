@@ -1,0 +1,17 @@
+# This file tells Render how to build and deploy your application as a Docker container.
+services:
+  # A name for your service on the Render dashboard.
+  - name: banana-ripeness-app
+    # The type of service: a web server that runs in a Docker container.
+    type: web
+    env: docker
+    # The health check path tells Render if your app is running correctly.
+    healthCheckPath: /
+    # The Free plan is perfect for this project.
+    plan: free
+    # CRITICAL: This adds a free persistent disk to store your large model files,
+    # as the default storage on the free plan is too small.
+    disk:
+      name: models-storage
+      sizeGB: 5
+      mountPath: /app/models
