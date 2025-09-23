@@ -12,8 +12,8 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 # --- 1. SETUP AND CONFIGURATION ---
 app = Flask(
     __name__,
-    template_folder="templates",  # explicitly set templates folder
-    static_folder="static"        # explicitly set static folder
+    template_folder="templates",
+    static_folder="static"
 )
 
 # --- Model Configuration ---
@@ -99,6 +99,11 @@ def handle_prediction():
     except Exception as e:
         print(f"Error during prediction: {e}")
         return jsonify({'error': 'Server could not process the image'}), 500
+
+# ✅ Health-check route for Render
+@app.route('/health', methods=['GET'])
+def health():
+    return jsonify({"status": "ok"}), 200
 
 
 # --- 5. START APP ---
