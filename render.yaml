@@ -4,7 +4,3 @@ services:
     env: docker
     plan: free
     dockerfilePath: ./Dockerfile
-    buildCommand: |
-      git lfs install
-      git lfs pull
-    startCommand: gunicorn app:app --workers=4 --threads=2 --timeout=120
