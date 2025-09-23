@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y git git-lfs && git-lfs install
 # Instead of copying local files, we clone the repository directly from GitHub.
 # This ensures that the .git directory is present inside the container,
 # which is necessary for `git lfs pull` to work.
-# Use your actual public repository URL here.
+# This uses your actual public repository URL.
 RUN git clone https://github.com/anish1cs/Days-Death-To-a-Banana-.git .
 
 # Now that we are in a proper Git repository, this command will succeed.
