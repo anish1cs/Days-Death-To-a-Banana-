@@ -1,34 +1,49 @@
-Virtual Environment
+# -------------------------
+# Virtual Environment
+# -------------------------
 venv/
 .venv/
 
-Dataset
+# -------------------------
+# Dataset (don't upload raw data/CSVs)
+# -------------------------
 data/
 *.csv
 
-Trained Models
-models/
-models_ensemble/
-models_for_webapp/
-*.keras
-*.pkl
-*.h5
+# -------------------------
+# Trained Models
+# -------------------------
+# Track models with Git LFS instead of ignoring
+# (Git LFS will handle *.keras and *.pkl files)
+# DO NOT ignore models/ folder now
+# models/
+# *.keras
+# *.pkl
+# *.h5
 
-Python Cache
-pycache/
+# -------------------------
+# Python Cache
+# -------------------------
+__pycache__/
 *.pyc
 *.pyo
 *.pyd
 
-IDE & Editor specific
+# -------------------------
+# IDE & Editor specific
+# -------------------------
 .vscode/
 .idea/
 *.swp
 *.swo
 
-Jupyter Notebook Checkpoints
+# -------------------------
+# Jupyter Notebook Checkpoints
+# -------------------------
 .ipynb_checkpoints/
 
-Operating System Files
+# -------------------------
+# Operating System Files
+# -------------------------
 .DS_Store
 Thumbs.db
